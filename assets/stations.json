@@ -1,0 +1,25 @@
+[
+	{
+		"name" : "Tilak Nagar",
+		"lat" : "28.6364583",
+		"lng" : "77.0963717",
+		"selected" : true
+	},
+	
+	{
+		"name" : "Subhash Nagar",
+		"lat" : "28.6403102",
+		"lng" : "77.1050097"
+	},
+	{
+		"name" : "Tagore Garden",
+		"lat" : "28.6437294",
+		"lng" : "77.1127986",
+		"selected" : true
+	},
+	{
+		"name" : "Rajouri Garden",
+		"lat" : "28.6442202",
+		"lng" : "77.1172779"
+	}				
+]
