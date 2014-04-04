@@ -1,7 +1,5 @@
 package in.appdoor.metroalarm;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,7 +13,6 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.ListView;
 import android.widget.TextView;
 
 public class AlarmListAdapter extends ArrayAdapter<Station> implements Filterable {
@@ -85,6 +82,7 @@ public class AlarmListAdapter extends ArrayAdapter<Station> implements Filterabl
 							CheckBox cb = (CheckBox) v;
 							Station _station = (Station) cb.getTag();
 							_station.setSelected(cb.isChecked());
+							StationRepo.getInstance().deactivateStation(_station.getName());
 						}
 					});
 

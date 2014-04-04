@@ -2,8 +2,9 @@ package in.appdoor.metroalarm;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Observable;
 
-public class StationRepo {
+public class StationRepo extends Observable {
 	private List<Station> stations;
 	
 	private static final StationRepo INSTANCE = new StationRepo();
@@ -31,5 +32,20 @@ public class StationRepo {
 			if(s.isSelected()) result.add(s);
 		}
 		return result;
+	}
+	
+	public void deactivateStation(String name) {
+		for(Station s : this.stations) {
+			if(s.getName().equalsIgnoreCase(name)) {
+				s.setSelected(false);
+				notifyChanged();
+				break;
+			}
+		}
+	}
+	
+	public void notifyChanged() {
+		setChanged();
+		notifyObservers();
 	}
 }

@@ -1,6 +1,8 @@
 package in.appdoor.metroalarm;
 
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,7 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-public class StationListAdapter extends ArrayAdapter<Station> {
+public class StationListAdapter extends ArrayAdapter<Station> implements Observer {
 
 	private List<Station> stationList;
 	private Activity activity;
@@ -25,6 +27,7 @@ public class StationListAdapter extends ArrayAdapter<Station> {
 		super(activity, textViewResourceId, stationList);
 		this.activity = activity;
 		this.stationList = stationList;
+		StationRepo.getInstance().addObserver(this);
 	}
 
 	private class ViewHolder {
@@ -59,7 +62,7 @@ public class StationListAdapter extends ArrayAdapter<Station> {
 							CheckBox cb = (CheckBox) v;
 							Station _station = (Station) cb.getTag();
 							_station.setSelected(cb.isChecked());
-							alarmViewAdapter.getFilter().filter("");
+							StationRepo.getInstance().notifyChanged();
 						}
 					});
 
@@ -76,6 +79,12 @@ public class StationListAdapter extends ArrayAdapter<Station> {
 		holder.stationCheckbox.setTag(station);
 
 		return convertView;
+	}
+
+	@Override
+	public void update(Observable obs, Object data) {
+		notifyDataSetChanged();
+		alarmViewAdapter.getFilter().filter("");
 	}
 
 }
