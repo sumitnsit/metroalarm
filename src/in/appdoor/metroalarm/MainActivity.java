@@ -258,20 +258,13 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
 	public void onLocationChanged(Location location) {
 		
 		mCurrentLocation = location;
-		// Report to the UI that the location was updated
-		String msg = "Updated Location: " +
-					Double.toString(location.getLatitude()) + "," +
-					Double.toString(location.getLongitude());
-//		Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-		
-//		LatLng currentLatLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
 		
 		List<Station> activeStations = StationRepo.getInstance().getStationsWithAlarm();
 		float[] results = new float[1];
 		for(Station s : activeStations) {
 			final Station station = s;
 			Location.distanceBetween(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude(), station.getLat(), station.getLng(), results);
-			if(results[0] < 750) {
+			if(results[0] < 1000) {
 //				Toast.makeText(this, "You are close to " + s.getName(), Toast.LENGTH_LONG).show();
 				// Vibrate for 500 milliseconds
 				
