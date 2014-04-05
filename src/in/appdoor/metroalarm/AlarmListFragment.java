@@ -18,7 +18,7 @@ import android.widget.ListView;
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_stations, container, false);
+            View rootView = inflater.inflate(R.layout.activity_main, container, false);
             ListView listStations = (ListView) rootView.findViewById(R.id.listStations);
 
             listAdapter = new AlarmListAdapter(this.getActivity(),
