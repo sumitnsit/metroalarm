@@ -1,17 +1,12 @@
 package in.appdoor.metroalarm;
 
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -24,18 +19,10 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.os.Vibrator;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -82,20 +69,8 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        // Initialize station data
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-        	Station[] values = new Station[0];
-			values = mapper.readValue(getAssets().open("stations.json"), Station[].class);
-			if(StationRepo.getInstance().getStations() == null) {
-				StationRepo.init(Arrays.asList(values));
-			}
-		} catch (JsonParseException e) {
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+        if(StationRepo.getInstance().getStations() == null) {
+			StationRepo.init(this);
 		}
         
         setContentView(R.layout.activity_main);
@@ -310,14 +285,19 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
 					builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 				           public void onClick(DialogInterface dialog, int id) {
 				               alertDialog.dismiss();
-				               r.stop();
-				               StationRepo.getInstance().deactivateStation(station.getName());
-				               alertDialog = null;
 				           }
 				    });
 					
 					// 3. Get the AlertDialog from create()
 					this.alertDialog = builder.create();
+					this.alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+						@Override
+						public void onDismiss(DialogInterface dialog) {
+							r.stop();
+				            StationRepo.getInstance().deactivateStation(station.getName());
+				            alertDialog = null;
+						}
+					});
 				}
 				
 				if(!this.alertDialog.isShowing()) {
@@ -331,6 +311,16 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
 				v.vibrate(new long[]{200, 800, 200, 800}, -1);
 				break;
 			}
+		}
+	}
+	
+	@Override
+	public void onBackPressed() {
+		if(StationRepo.getInstance().getStationsWithAlarm().size() > 0) {
+			Toast.makeText(this, "Remove all alarms to exit. To hide this application and let it run in the background, please press the home button.", Toast.LENGTH_SHORT).show();
+			return;
+		} else {
+			super.onBackPressed();
 		}
 	}
 
