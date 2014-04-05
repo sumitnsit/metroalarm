@@ -1,5 +1,6 @@
 package in.appdoor.metroalarm;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -27,12 +28,14 @@ public class StationListAdapter extends ArrayAdapter<Station> implements Observe
 		super(activity, textViewResourceId, stationList);
 		this.activity = activity;
 		this.stationList = stationList;
+		Collections.sort(stationList);
 		StationRepo.getInstance().addObserver(this);
 	}
 
 	private class ViewHolder {
 		TextView stationName;
 		CheckBox stationCheckbox;
+		CheckBox favouriteCheckbox;
 	}
 
 	@Override
@@ -54,6 +57,7 @@ public class StationListAdapter extends ArrayAdapter<Station> implements Observe
 					.findViewById(R.id.stationName);
 			holder.stationCheckbox = (CheckBox) convertView
 					.findViewById(R.id.stationCheckbox);
+			holder.favouriteCheckbox = (CheckBox) convertView.findViewById(R.id.starCheckbox);
 
 			convertView.setTag(holder);
 
@@ -65,6 +69,14 @@ public class StationListAdapter extends ArrayAdapter<Station> implements Observe
 							StationRepo.getInstance().notifyChanged();
 						}
 					});
+			holder.favouriteCheckbox.setOnClickListener(new View.OnClickListener() {
+				public void onClick(View v) {
+					CheckBox cb = (CheckBox) v;
+					Station _station = (Station) cb.getTag();
+					_station.setFavourite(cb.isChecked());
+					StationRepo.getInstance().notifyChanged();
+				}
+			});
 
 		} else {
 			holder = (ViewHolder) convertView.getTag();
@@ -73,18 +85,20 @@ public class StationListAdapter extends ArrayAdapter<Station> implements Observe
 		Station station = stationList.get(position);
 
 		holder.stationName.setText(station.getName());
-		// holder.stationCheckbox.setText("");
 		holder.stationCheckbox.setChecked(station.isSelected());
-
 		holder.stationCheckbox.setTag(station);
+
+		holder.favouriteCheckbox.setChecked(station.isFavourite());
+		holder.favouriteCheckbox.setTag(station);
 
 		return convertView;
 	}
 
 	@Override
 	public void update(Observable obs, Object data) {
+		this.stationList = StationRepo.getInstance().getStations();
+		Collections.sort(this.stationList);
 		notifyDataSetChanged();
-		alarmViewAdapter.getFilter().filter("");
 	}
 
 }

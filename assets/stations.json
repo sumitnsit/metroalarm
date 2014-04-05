@@ -3,13 +3,15 @@
 		"name" : "Tilak Nagar",
 		"lat" : "28.6364583",
 		"lng" : "77.0963717",
-		"selected" : true
+		"selected" : true,
+		"favourite" : true
 	},
 	
 	{
 		"name" : "Subhash Nagar",
 		"lat" : "28.6403102",
-		"lng" : "77.1050097"
+		"lng" : "77.1050097",
+		"favourite" : true
 	},
 	{
 		"name" : "Tagore Garden",
