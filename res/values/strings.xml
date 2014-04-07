@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">MetroAlarm</string>
+    <string name="app_name">Metro Alarm</string>
     <string name="action_settings">Settings</string>
     <string name="title_stations">Stations</string>
     <string name="title_alarms">Alarms</string>
